@@ -26,6 +26,12 @@ uv run pytest
 uv run pytest tests/test_cli.py::test_scan_command_runs
 ```
 
+## Tooling rationale
+
+- **uv over Poetry/pip** — single fast binary for dependency resolution, virtualenv management, and running scripts (`uv run`), with a lockfile (`uv.lock`) for reproducible installs. Avoids Poetry's slower resolver and pip's lack of built-in lockfile/venv management.
+- **Typer over Click/argparse** — CLI commands are plain type-hinted functions (`@app.command()`), so argument parsing, validation, and `--help` text are derived from function signatures instead of hand-written parser boilerplate. Built on Click, so Click's ecosystem is still available if needed.
+- **pytest** — standard choice for Python testing; supports Typer's `CliRunner` for in-process CLI invocation, fixtures, and concise assertion syntax without the boilerplate of `unittest`.
+
 ## Architecture
 
 - `src/schemascout/cli.py` — Typer app and CLI entry point (`schemascout` console script, registered in `pyproject.toml`). Commands are added here as Typer `@app.command()` functions.
